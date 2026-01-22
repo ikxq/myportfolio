@@ -1,4 +1,4 @@
-// Three.js 3D Scene for Hero Section
+// Three.js 3D Coding Background Scene
 class HeroScene {
     constructor() {
         this.container = document.getElementById('hero-canvas');
@@ -7,7 +7,7 @@ class HeroScene {
         this.scene = null;
         this.camera = null;
         this.renderer = null;
-        this.geometries = [];
+        this.codeLines = [];
         this.particles = null;
         this.mouse = { x: 0, y: 0 };
         this.targetRotation = { x: 0, y: 0 };
@@ -16,9 +16,70 @@ class HeroScene {
         // Performance optimization: detect mobile
         this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
 
+        // Code snippets for different programming languages
+        this.codeSnippets = [
+            // JavaScript
+            'const app = express();',
+            'async function getData() {',
+            'return response.json();',
+            'useState(initialValue)',
+            'useEffect(() => {',
+            'map(item => item.id)',
+            'filter(x => x > 0)',
+            'await fetch(url)',
+            'export default App;',
+
+            // React
+            '<Component prop={value} />',
+            'return <div>{data}</div>',
+            'props.children',
+            'dispatch(action)',
+
+            // Python
+            'def calculate(x, y):',
+            'return sum(numbers)',
+            'import numpy as np',
+            'class Model:',
+            'for i in range(10):',
+
+            // Node.js
+            'app.listen(3000)',
+            'router.get(\'/api\')',
+            'mongoose.connect()',
+            'res.json(data)',
+
+            // Flutter/Dart
+            'Widget build(context)',
+            'setState(() {})',
+            'Navigator.push(',
+            'ListView.builder(',
+
+            // Database
+            'SELECT * FROM users',
+            'db.collection.find()',
+            'WHERE id = ?',
+            'JOIN orders ON',
+
+            // CSS
+            'display: flex;',
+            'position: absolute;',
+            'transform: scale(1.2);',
+            'background: linear-gradient',
+
+            // General
+            'try { } catch(e) { }',
+            'if (condition) {',
+            'else if (value) {',
+            'switch (type) {',
+            'while (true) {',
+            'break; continue;',
+            'console.log(data)',
+            'throw new Error()',
+        ];
+
         this.init();
         this.createLights();
-        this.createGeometries();
+        this.createCodeLines();
         this.createParticles();
         this.addEventListeners();
         this.animate();
@@ -27,7 +88,7 @@ class HeroScene {
     init() {
         // Scene setup
         this.scene = new THREE.Scene();
-        this.scene.fog = new THREE.Fog(0x0f172a, 1, 50);
+        this.scene.fog = new THREE.Fog(0x0f172a, 10, 60);
 
         // Camera setup
         this.camera = new THREE.PerspectiveCamera(
@@ -42,7 +103,7 @@ class HeroScene {
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.container,
             alpha: true,
-            antialias: true
+            antialias: !this.isMobile // Disable antialiasing on mobile for performance
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -51,135 +112,142 @@ class HeroScene {
 
     createLights() {
         // Ambient light
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
         this.scene.add(ambientLight);
 
-        // Directional light 1 (purple)
-        const directionalLight1 = new THREE.DirectionalLight(0x667eea, 1);
+        // Directional lights for code highlighting
+        const directionalLight1 = new THREE.DirectionalLight(0x667eea, 1.5);
         directionalLight1.position.set(5, 5, 5);
         this.scene.add(directionalLight1);
 
-        // Directional light 2 (pink)
-        const directionalLight2 = new THREE.DirectionalLight(0x764ba2, 0.8);
+        const directionalLight2 = new THREE.DirectionalLight(0x764ba2, 1);
         directionalLight2.position.set(-5, -5, -5);
         this.scene.add(directionalLight2);
 
-        // Point light (moving)
+        // Point light for dynamic glow
         this.pointLight = new THREE.PointLight(0x8b5cf6, 2, 50);
-        this.pointLight.position.set(0, 0, 10);
+        this.pointLight.position.set(0, 0, 15);
         this.scene.add(this.pointLight);
     }
 
-    createGeometries() {
-        const geometryTypes = [
-            new THREE.BoxGeometry(2, 2, 2),
-            new THREE.SphereGeometry(1.5, 32, 32),
-            new THREE.TorusGeometry(1.2, 0.4, 16, 100),
-            new THREE.OctahedronGeometry(1.5),
-            new THREE.TetrahedronGeometry(1.5),
-            new THREE.IcosahedronGeometry(1.5)
-        ];
+    createCodeTexture(text, color = '#667eea') {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
 
-        const materials = [
-            new THREE.MeshPhongMaterial({
-                color: 0x667eea,
-                shininess: 100,
-                transparent: true,
-                opacity: 0.8,
-                wireframe: false
-            }),
-            new THREE.MeshPhongMaterial({
-                color: 0x764ba2,
-                shininess: 100,
-                transparent: true,
-                opacity: 0.8,
-                wireframe: false
-            }),
-            new THREE.MeshPhongMaterial({
-                color: 0x8b5cf6,
-                shininess: 100,
-                transparent: true,
-                opacity: 0.8,
-                wireframe: false
-            }),
-            new THREE.MeshStandardMaterial({
-                color: 0x6366f1,
-                metalness: 0.7,
-                roughness: 0.2,
-                transparent: true,
-                opacity: 0.9
-            })
-        ];
+        // Set canvas size
+        const fontSize = this.isMobile ? 16 : 24;
+        canvas.width = 512;
+        canvas.height = 64;
 
-        // Create multiple 3D objects (fewer on mobile for performance)
-        const objectCount = this.isMobile ? 8 : 15;
-        for (let i = 0; i < objectCount; i++) {
-            const geometry = geometryTypes[Math.floor(Math.random() * geometryTypes.length)];
-            const material = materials[Math.floor(Math.random() * materials.length)].clone();
-            const mesh = new THREE.Mesh(geometry, material);
+        // Clear canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Set text style
+        context.font = `${fontSize}px "Courier New", monospace`;
+        context.fillStyle = color;
+        context.textAlign = 'left';
+        context.textBaseline = 'middle';
+
+        // Add subtle glow effect
+        context.shadowColor = color;
+        context.shadowBlur = 10;
+
+        // Draw text
+        context.fillText(text, 10, canvas.height / 2);
+
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    createCodeLines() {
+        const lineCount = this.isMobile ? 20 : 40;
+        const colors = ['#667eea', '#764ba2', '#8b5cf6', '#6366f1', '#a855f7'];
+
+        for (let i = 0; i < lineCount; i++) {
+            // Random code snippet
+            const code = this.codeSnippets[Math.floor(Math.random() * this.codeSnippets.length)];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            // Create texture
+            const texture = this.createCodeTexture(code, color);
+
+            // Create sprite material
+            const material = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+
+            // Create sprite
+            const sprite = new THREE.Sprite(material);
 
             // Random position
-            mesh.position.x = (Math.random() - 0.5) * 50;
-            mesh.position.y = (Math.random() - 0.5) * 50;
-            mesh.position.z = (Math.random() - 0.5) * 40 - 10;
-
-            // Random rotation
-            mesh.rotation.x = Math.random() * Math.PI;
-            mesh.rotation.y = Math.random() * Math.PI;
+            sprite.position.x = (Math.random() - 0.5) * 60;
+            sprite.position.y = (Math.random() - 0.5) * 60;
+            sprite.position.z = (Math.random() - 0.5) * 50 - 10;
 
             // Random scale
-            const scale = Math.random() * 0.5 + 0.5;
-            mesh.scale.set(scale, scale, scale);
+            const scale = (Math.random() * 0.5 + 0.5) * (this.isMobile ? 2 : 3);
+            sprite.scale.set(scale * 4, scale, 1);
 
             // Store animation properties
-            mesh.userData = {
-                rotationSpeed: {
-                    x: (Math.random() - 0.5) * 0.02,
-                    y: (Math.random() - 0.5) * 0.02,
-                    z: (Math.random() - 0.5) * 0.02
-                },
-                floatSpeed: Math.random() * 0.5 + 0.5,
-                floatOffset: Math.random() * Math.PI * 2,
-                initialY: mesh.position.y
+            sprite.userData = {
+                speedY: -(Math.random() * 0.3 + 0.1), // Falling speed
+                speedX: (Math.random() - 0.5) * 0.05, // Drift speed
+                initialX: sprite.position.x,
+                initialY: sprite.position.y,
+                rotationSpeed: (Math.random() - 0.5) * 0.01,
+                pulseSpeed: Math.random() * 2 + 1,
+                pulseOffset: Math.random() * Math.PI * 2,
+                resetTimer: Math.random() * 100
             };
 
-            this.geometries.push(mesh);
-            this.scene.add(mesh);
+            this.codeLines.push(sprite);
+            this.scene.add(sprite);
         }
 
-        // Add wireframe versions for some objects (fewer on mobile)
-        const wireframeCount = this.isMobile ? 2 : 5;
-        for (let i = 0; i < wireframeCount; i++) {
-            const geometry = geometryTypes[Math.floor(Math.random() * geometryTypes.length)];
-            const material = new THREE.MeshBasicMaterial({
-                color: 0x667eea,
-                wireframe: true,
+        // Add some larger, slower-moving code blocks
+        const blockCount = this.isMobile ? 5 : 10;
+        for (let i = 0; i < blockCount; i++) {
+            const code = this.codeSnippets[Math.floor(Math.random() * this.codeSnippets.length)];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            const texture = this.createCodeTexture(code, color);
+            const material = new THREE.SpriteMaterial({
+                map: texture,
                 transparent: true,
-                opacity: 0.3
+                opacity: 0.4,
+                blending: THREE.AdditiveBlending
             });
-            const mesh = new THREE.Mesh(geometry, material);
 
-            mesh.position.x = (Math.random() - 0.5) * 50;
-            mesh.position.y = (Math.random() - 0.5) * 50;
-            mesh.position.z = (Math.random() - 0.5) * 40 - 10;
+            const sprite = new THREE.Sprite(material);
 
-            mesh.userData = {
-                rotationSpeed: {
-                    x: (Math.random() - 0.5) * 0.01,
-                    y: (Math.random() - 0.5) * 0.01,
-                    z: (Math.random() - 0.5) * 0.01
-                }
+            sprite.position.x = (Math.random() - 0.5) * 80;
+            sprite.position.y = (Math.random() - 0.5) * 80;
+            sprite.position.z = (Math.random() - 0.5) * 60 - 20;
+
+            const scale = (Math.random() * 1 + 1) * (this.isMobile ? 2.5 : 4);
+            sprite.scale.set(scale * 4, scale, 1);
+
+            sprite.userData = {
+                speedY: -(Math.random() * 0.15 + 0.05),
+                speedX: (Math.random() - 0.5) * 0.03,
+                initialX: sprite.position.x,
+                initialY: sprite.position.y,
+                rotationSpeed: (Math.random() - 0.5) * 0.005,
+                pulseSpeed: Math.random() * 1.5 + 0.5,
+                pulseOffset: Math.random() * Math.PI * 2,
+                resetTimer: Math.random() * 100
             };
 
-            this.geometries.push(mesh);
-            this.scene.add(mesh);
+            this.codeLines.push(sprite);
+            this.scene.add(sprite);
         }
     }
 
     createParticles() {
         const particlesGeometry = new THREE.BufferGeometry();
-        // Reduce particles on mobile for better performance
-        const particlesCount = this.isMobile ? 300 : 1000;
+        const particlesCount = this.isMobile ? 200 : 500;
         const posArray = new Float32Array(particlesCount * 3);
 
         for (let i = 0; i < particlesCount * 3; i++) {
@@ -189,10 +257,10 @@ class HeroScene {
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.1,
+            size: 0.15,
             color: 0x667eea,
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.4,
             blending: THREE.AdditiveBlending
         });
 
@@ -201,13 +269,13 @@ class HeroScene {
     }
 
     addEventListeners() {
-        // Mouse move
+        // Mouse move - subtle camera movement
         window.addEventListener('mousemove', (e) => {
             this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
-            this.targetRotation.y = this.mouse.x * 0.3;
-            this.targetRotation.x = this.mouse.y * 0.3;
+            this.targetRotation.y = this.mouse.x * 0.2;
+            this.targetRotation.x = this.mouse.y * 0.2;
         });
 
         // Window resize
@@ -221,8 +289,7 @@ class HeroScene {
         window.addEventListener('scroll', () => {
             const scrollPercent = window.pageYOffset / window.innerHeight;
             if (scrollPercent < 1) {
-                this.camera.position.z = 30 + scrollPercent * 10;
-                this.scene.rotation.z = scrollPercent * 0.5;
+                this.camera.position.z = 30 + scrollPercent * 5;
             }
         });
     }
@@ -239,39 +306,50 @@ class HeroScene {
         this.camera.rotation.x = this.currentRotation.x;
         this.camera.rotation.y = this.currentRotation.y;
 
-        // Animate geometries
-        this.geometries.forEach((mesh) => {
-            // Rotation
-            if (mesh.userData.rotationSpeed) {
-                mesh.rotation.x += mesh.userData.rotationSpeed.x;
-                mesh.rotation.y += mesh.userData.rotationSpeed.y;
-                mesh.rotation.z += mesh.userData.rotationSpeed.z;
+        // Animate code lines (matrix-style falling effect)
+        this.codeLines.forEach((sprite) => {
+            // Move down (falling effect)
+            sprite.position.y += sprite.userData.speedY;
+
+            // Slight horizontal drift
+            sprite.position.x += sprite.userData.speedX;
+
+            // Subtle rotation
+            sprite.material.rotation += sprite.userData.rotationSpeed;
+
+            // Pulse opacity
+            const pulse = Math.sin(time * sprite.userData.pulseSpeed + sprite.userData.pulseOffset);
+            sprite.material.opacity = 0.3 + pulse * 0.2;
+
+            // Reset position when out of view
+            if (sprite.position.y < -40) {
+                sprite.position.y = 40;
+                sprite.position.x = (Math.random() - 0.5) * 60;
+                // Change code snippet
+                const newCode = this.codeSnippets[Math.floor(Math.random() * this.codeSnippets.length)];
+                const colors = ['#667eea', '#764ba2', '#8b5cf6', '#6366f1', '#a855f7'];
+                const newColor = colors[Math.floor(Math.random() * colors.length)];
+                sprite.material.map = this.createCodeTexture(newCode, newColor);
+                sprite.material.needsUpdate = true;
             }
 
-            // Float animation
-            if (mesh.userData.floatSpeed) {
-                mesh.position.y = mesh.userData.initialY +
-                    Math.sin(time * mesh.userData.floatSpeed + mesh.userData.floatOffset) * 2;
-            }
-
-            // Pulse effect
-            const pulse = Math.sin(time * 2 + mesh.position.x) * 0.1 + 1;
-            if (mesh.material.opacity !== undefined) {
-                mesh.material.opacity = 0.5 + pulse * 0.3;
+            // Keep within horizontal bounds
+            if (Math.abs(sprite.position.x) > 40) {
+                sprite.userData.speedX *= -0.5;
             }
         });
 
-        // Animate particles
+        // Animate particles (slow rotation)
         if (this.particles) {
-            this.particles.rotation.y += 0.0005;
-            this.particles.rotation.x = Math.sin(time * 0.3) * 0.1;
+            this.particles.rotation.y += 0.0003;
+            this.particles.rotation.x = Math.sin(time * 0.2) * 0.1;
         }
 
         // Animate point light
         if (this.pointLight) {
-            this.pointLight.position.x = Math.sin(time * 0.5) * 15;
-            this.pointLight.position.y = Math.cos(time * 0.3) * 15;
-            this.pointLight.position.z = Math.sin(time * 0.7) * 10 + 10;
+            this.pointLight.position.x = Math.sin(time * 0.4) * 20;
+            this.pointLight.position.y = Math.cos(time * 0.25) * 20;
+            this.pointLight.position.z = Math.sin(time * 0.6) * 10 + 15;
         }
 
         this.renderer.render(this.scene, this.camera);
