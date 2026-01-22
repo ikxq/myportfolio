@@ -166,6 +166,12 @@ body[dir="rtl"] .fab-menu-item:hover {
     transform: scale(1.1) translateX(5px);
 }
 
+body[dir="rtl"] .modal-close {
+    right: auto;
+    left: 1rem;
+    float: left;
+}
+
 /* Hero Section */
 .hero {
     min-height: 100vh;
@@ -468,6 +474,10 @@ body[dir="rtl"] .fab-menu-item:hover {
     transition: all 0.3s ease;
     display: inline-block;
     text-align: center;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
 }
 
 .btn-primary {
@@ -493,37 +503,135 @@ body[dir="rtl"] .fab-menu-item:hover {
     color: white;
 }
 
-/* Project Details Section */
-.project-details {
-    padding: 6rem 5%;
-    background: var(--dark-bg);
-    min-height: 100vh;
-}
-
-.back-button {
-    display: inline-flex;
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: none;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    justify-content: center;
+    padding: 0;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    position: relative;
+    background: var(--dark-bg);
+    border-radius: 20px;
+    max-width: 1200px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 10000;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-close {
+    position: sticky;
+    top: 1rem;
+    right: 1rem;
+    float: right;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
     background: var(--card-bg);
+    border: 2px solid var(--primary-color);
     color: var(--text-primary);
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.3s ease;
-    margin-bottom: 2rem;
+    z-index: 10001;
+    margin-bottom: -45px;
 }
 
-.back-button:hover {
+.modal-close:hover {
     background: var(--primary-color);
-    transform: translateX(-5px);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
 }
 
-.back-button svg {
-    width: 20px;
-    height: 20px;
+.modal-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+.modal-body {
+    padding: 3rem;
+    clear: both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Custom Scrollbar for Modal */
+.modal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: var(--card-bg);
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* Project Details Section (now used inside modals) */
+.project-details {
+    padding: 0;
+    background: transparent;
+    min-height: auto;
+}
+
+/* Modal trigger buttons */
+.btn-modal {
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .detail-title {
@@ -1314,6 +1422,36 @@ section {
 
 .contact-section {
     animation-delay: 0.3s;
+}
+
+/* Modal Mobile Responsive */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+        border-radius: 15px;
+    }
+
+    .modal-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .modal-close {
+        width: 40px;
+        height: 40px;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    .modal-close svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    body[dir="rtl"] .modal-close {
+        left: 0.5rem;
+        right: auto;
+    }
 }
 
 /* 3D Canvas Performance Optimization for Mobile */

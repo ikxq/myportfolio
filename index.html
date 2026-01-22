@@ -106,7 +106,7 @@
                             </span>
                         </div>
                         <div class="project-links">
-                            <a href="#mazad-details" class="btn-primary">View Details</a>
+                            <button class="btn-primary" data-modal="mazad-modal">View Details</button>
                             <a href="https://github.com/ikxq" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                         </div>
                         <div class="project-links">
                             <a href="https://shen-frontend.onrender.com" target="_blank" rel="noopener" class="btn-primary">View Project</a>
-                            <a href="https://github.com/ikxq" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
+                            <button class="btn-secondary btn-modal" data-modal="shen-modal">View Details</button>
                         </div>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
                             </span>
                         </div>
                         <div class="project-links">
-                            <a href="#cafeconnect-details" class="btn-primary">View Details</a>
+                            <button class="btn-primary" data-modal="cafeconnect-modal">View Details</button>
                             <a href="https://github.com/ikxq" target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
                         </div>
                     </div>
@@ -189,18 +189,18 @@
         </div>
     </section>
 
-    <!-- Project Details Sections -->
-    <!-- Mazad Oman Details -->
-    <section id="mazad-details" class="project-details">
-        <div class="container">
-            <button class="back-button" onclick="scrollToProjects()">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+    <!-- Project Modals -->
+    <!-- Mazad Oman Modal -->
+    <div id="mazad-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-                Back to Projects
             </button>
-
-            <h2 class="detail-title">Mazad Oman</h2>
+            <div class="modal-body">
+                <h2 class="detail-title">Mazad Oman</h2>
             <p class="detail-subtitle">Online Car Auction Platform for Oman</p>
 
             <div class="project-showcase">
@@ -301,20 +301,21 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Shen Details -->
-    <section id="shen-details" class="project-details">
-        <div class="container">
-            <button class="back-button" onclick="scrollToProjects()">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+    <!-- Shen Modal -->
+    <div id="shen-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-                Back to Projects
             </button>
-
-            <h2 class="detail-title">Shen</h2>
+            <div class="modal-body">
+                <h2 class="detail-title">Shen</h2>
             <p class="detail-subtitle">Home Products E-commerce Website</p>
 
             <div class="project-showcase">
@@ -387,19 +388,19 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- CafeConnect Details -->
-    <section id="cafeconnect-details" class="project-details">
-        <div class="container">
-            <button class="back-button" onclick="scrollToProjects()">
-                <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+    <!-- CafeConnect Modal -->
+    <div id="cafeconnect-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-                Back to Projects
             </button>
-
-            <h2 class="detail-title">CafeConnect</h2>
+            <div class="modal-body">
+                <h2 class="detail-title">CafeConnect</h2>
             <p class="detail-subtitle">Mobile App for Café Discovery with Reward System</p>
 
             <div class="project-showcase">
@@ -483,7 +484,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Skills Section -->
     <section id="skills" class="skills-section">

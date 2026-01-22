@@ -48,46 +48,113 @@ document.querySelectorAll('.project-card').forEach(card => {
     observer.observe(card);
 });
 
-// Add hover effect and click handlers to project cards
-const projectCards = document.querySelectorAll('.project-card');
+// Modal Functionality
+class ModalManager {
+    constructor() {
+        this.modals = document.querySelectorAll('.modal');
+        this.init();
+    }
 
-projectCards.forEach((card, index) => {
-    card.addEventListener('mouseenter', function() {
-        this.style.zIndex = '10';
-        this.style.cursor = 'pointer';
-    });
-
-    card.addEventListener('mouseleave', function() {
-        this.style.zIndex = '1';
-    });
-
-    // Add click handler to scroll to project details
-    card.addEventListener('click', function() {
-        let targetId;
-        if (index === 0) targetId = 'mazad-details';
-        else if (index === 1) targetId = 'shen-details';
-        else if (index === 2) targetId = 'cafeconnect-details';
-
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-            targetSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
+    init() {
+        // Open modal buttons
+        document.querySelectorAll('[data-modal]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const modalId = button.getAttribute('data-modal');
+                this.openModal(modalId);
             });
-        }
-    });
-});
+        });
 
-// Function to scroll back to projects section
-function scrollToProjects() {
-    const projectsSection = document.getElementById('projects');
-    if (projectsSection) {
-        projectsSection.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
+        // Close buttons
+        document.querySelectorAll('.modal-close').forEach(closeBtn => {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.closeModal(closeBtn.closest('.modal'));
+            });
+        });
+
+        // Close on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', () => {
+                this.closeModal(overlay.closest('.modal'));
+            });
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeAllModals();
+            }
+        });
+
+        // Project card click handlers (open corresponding modal)
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach((card, index) => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+                this.style.cursor = 'pointer';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+
+            // Click card to open modal
+            card.addEventListener('click', function(e) {
+                // Don't open modal if clicking on a link or button
+                if (e.target.closest('a') || e.target.closest('button')) {
+                    return;
+                }
+
+                let modalId;
+                if (index === 0) modalId = 'mazad-modal';
+                else if (index === 1) modalId = 'shen-modal';
+                else if (index === 2) modalId = 'cafeconnect-modal';
+
+                if (modalId) {
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        new ModalManager().openModal(modalId);
+                    }
+                }
+            });
         });
     }
+
+    openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Scroll modal content to top
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.scrollTop = 0;
+        }
+    }
+
+    closeModal(modal) {
+        if (!modal) return;
+
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    closeAllModals() {
+        this.modals.forEach(modal => {
+            modal.classList.remove('active');
+        });
+        document.body.style.overflow = '';
+    }
 }
+
+// Initialize modal manager
+document.addEventListener('DOMContentLoaded', () => {
+    new ModalManager();
+});
 
 // Parallax effect for hero section
 window.addEventListener('scroll', () => {
@@ -474,7 +541,6 @@ const translations = {
         mazadSection4Title: "Built-in Chat System",
         mazadSection4Desc: "Real-time messaging system enabling direct communication between buyers and sellers. Features include message notifications, chat history, and user-friendly interface for seamless negotiation and inquiry handling.",
         techUsed: "Technologies Used",
-        backToProjects: "Back to Projects",
 
         // Shen Project
         shenTitle: "Shen",
@@ -568,7 +634,6 @@ const translations = {
         mazadSection4Title: "نظام الدردشة المدمج",
         mazadSection4Desc: "نظام مراسلة فوري يتيح التواصل المباشر بين المشترين والبائعين. يتضمن ميزات إشعارات الرسائل وسجل الدردشة وواجهة سهلة الاستخدام للتفاوض السلس ومعالجة الاستفسارات.",
         techUsed: "التقنيات المستخدمة",
-        backToProjects: "العودة إلى المشاريع",
 
         // Shen Project
         shenTitle: "شن",
@@ -721,9 +786,10 @@ function switchLanguage(lang) {
         projectCards[2].querySelector('.project-description').textContent = t.cafeDesc;
     }
 
-    // Update Mazad Oman detail section
-    const mazadDetails = document.getElementById('mazad-details');
-    if (mazadDetails) {
+    // Update Mazad Oman modal content
+    const mazadModal = document.getElementById('mazad-modal');
+    if (mazadModal) {
+        const mazadDetails = mazadModal;
         mazadDetails.querySelector('.detail-title').textContent = t.mazadTitle;
         mazadDetails.querySelector('.detail-subtitle').textContent = t.mazadSubtitle;
         const mazadSections = mazadDetails.querySelectorAll('.showcase-item');
@@ -745,16 +811,12 @@ function switchLanguage(lang) {
         }
         const mazadTechTitle = mazadDetails.querySelector('.tech-details h3');
         if (mazadTechTitle) mazadTechTitle.textContent = t.techUsed;
-        const mazadBackBtn = mazadDetails.querySelector('.back-button');
-        if (mazadBackBtn) {
-            const btnText = mazadBackBtn.childNodes[2];
-            if (btnText) btnText.textContent = t.backToProjects;
-        }
     }
 
-    // Update Shen detail section
-    const shenDetails = document.getElementById('shen-details');
-    if (shenDetails) {
+    // Update Shen modal content
+    const shenModal = document.getElementById('shen-modal');
+    if (shenModal) {
+        const shenDetails = shenModal;
         shenDetails.querySelector('.detail-title').textContent = t.shenTitle;
         shenDetails.querySelector('.detail-subtitle').textContent = t.shenSubtitle;
         const shenSections = shenDetails.querySelectorAll('.showcase-item');
@@ -772,16 +834,12 @@ function switchLanguage(lang) {
         }
         const shenTechTitle = shenDetails.querySelector('.tech-details h3');
         if (shenTechTitle) shenTechTitle.textContent = t.techUsed;
-        const shenBackBtn = shenDetails.querySelector('.back-button');
-        if (shenBackBtn) {
-            const btnText = shenBackBtn.childNodes[2];
-            if (btnText) btnText.textContent = t.backToProjects;
-        }
     }
 
-    // Update CafeConnect detail section
-    const cafeDetails = document.getElementById('cafeconnect-details');
-    if (cafeDetails) {
+    // Update CafeConnect modal content
+    const cafeModal = document.getElementById('cafeconnect-modal');
+    if (cafeModal) {
+        const cafeDetails = cafeModal;
         cafeDetails.querySelector('.detail-title').textContent = t.cafeTitle;
         cafeDetails.querySelector('.detail-subtitle').textContent = t.cafeSubtitle;
         const cafeSections = cafeDetails.querySelectorAll('.showcase-item');
@@ -799,11 +857,6 @@ function switchLanguage(lang) {
         }
         const cafeTechTitle = cafeDetails.querySelector('.tech-details h3');
         if (cafeTechTitle) cafeTechTitle.textContent = t.techUsed;
-        const cafeBackBtn = cafeDetails.querySelector('.back-button');
-        if (cafeBackBtn) {
-            const btnText = cafeBackBtn.childNodes[2];
-            if (btnText) btnText.textContent = t.backToProjects;
-        }
     }
 
     // Save language preference
