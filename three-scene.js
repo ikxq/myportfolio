@@ -111,23 +111,35 @@ class HeroScene {
     }
 
     createLights() {
-        // Ambient light
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        // Ambient light (increased for better visibility of colorful code)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(ambientLight);
 
-        // Directional lights for code highlighting
-        const directionalLight1 = new THREE.DirectionalLight(0x667eea, 1.5);
+        // Colorful directional lights for vibrant code highlighting
+        const directionalLight1 = new THREE.DirectionalLight(0x00ff88, 1.2); // Green
         directionalLight1.position.set(5, 5, 5);
         this.scene.add(directionalLight1);
 
-        const directionalLight2 = new THREE.DirectionalLight(0x764ba2, 1);
+        const directionalLight2 = new THREE.DirectionalLight(0xff0080, 0.8); // Hot pink
         directionalLight2.position.set(-5, -5, -5);
         this.scene.add(directionalLight2);
 
-        // Point light for dynamic glow
-        this.pointLight = new THREE.PointLight(0x8b5cf6, 2, 50);
-        this.pointLight.position.set(0, 0, 15);
-        this.scene.add(this.pointLight);
+        const directionalLight3 = new THREE.DirectionalLight(0x00d4ff, 0.6); // Cyan
+        directionalLight3.position.set(0, -5, 5);
+        this.scene.add(directionalLight3);
+
+        // Animated point lights for dynamic colorful glow
+        this.pointLight1 = new THREE.PointLight(0xff0080, 2, 50); // Hot pink
+        this.pointLight1.position.set(0, 0, 15);
+        this.scene.add(this.pointLight1);
+
+        this.pointLight2 = new THREE.PointLight(0x00ff88, 1.5, 40); // Green
+        this.pointLight2.position.set(10, 10, 10);
+        this.scene.add(this.pointLight2);
+
+        this.pointLight3 = new THREE.PointLight(0xffaa00, 1.5, 40); // Orange
+        this.pointLight3.position.set(-10, -10, 10);
+        this.scene.add(this.pointLight3);
     }
 
     createCodeTexture(text, color = '#667eea') {
@@ -160,7 +172,21 @@ class HeroScene {
 
     createCodeLines() {
         const lineCount = this.isMobile ? 20 : 40;
-        const colors = ['#667eea', '#764ba2', '#8b5cf6', '#6366f1', '#a855f7'];
+        // Vibrant syntax highlighting colors
+        const colors = [
+            '#00ff88', // Bright green (functions/methods)
+            '#ff0080', // Hot pink (keywords)
+            '#00d4ff', // Cyan (strings)
+            '#ffaa00', // Orange (numbers/constants)
+            '#a855f7', // Purple (variables)
+            '#ff4444', // Red (errors/important)
+            '#44ff44', // Lime green (success/comments)
+            '#ffff00', // Yellow (warnings)
+            '#ff66ff', // Magenta (classes)
+            '#00ffff', // Aqua (parameters)
+            '#ff9900', // Bright orange (operators)
+            '#66ff66'  // Light green (types)
+        ];
 
         for (let i = 0; i < lineCount; i++) {
             // Random code snippet
@@ -257,10 +283,10 @@ class HeroScene {
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.15,
-            color: 0x667eea,
+            size: 0.2,
+            color: 0x00ffff, // Bright cyan for visibility
             transparent: true,
-            opacity: 0.4,
+            opacity: 0.6,
             blending: THREE.AdditiveBlending
         });
 
@@ -327,7 +353,7 @@ class HeroScene {
                 sprite.position.x = (Math.random() - 0.5) * 60;
                 // Change code snippet
                 const newCode = this.codeSnippets[Math.floor(Math.random() * this.codeSnippets.length)];
-                const colors = ['#667eea', '#764ba2', '#8b5cf6', '#6366f1', '#a855f7'];
+                const colors = ['#00ff88', '#ff0080', '#00d4ff', '#ffaa00', '#a855f7', '#ff4444', '#44ff44', '#ffff00', '#ff66ff', '#00ffff', '#ff9900', '#66ff66'];
                 const newColor = colors[Math.floor(Math.random() * colors.length)];
                 sprite.material.map = this.createCodeTexture(newCode, newColor);
                 sprite.material.needsUpdate = true;
@@ -345,11 +371,23 @@ class HeroScene {
             this.particles.rotation.x = Math.sin(time * 0.2) * 0.1;
         }
 
-        // Animate point light
-        if (this.pointLight) {
-            this.pointLight.position.x = Math.sin(time * 0.4) * 20;
-            this.pointLight.position.y = Math.cos(time * 0.25) * 20;
-            this.pointLight.position.z = Math.sin(time * 0.6) * 10 + 15;
+        // Animate colorful point lights for dynamic effect
+        if (this.pointLight1) {
+            this.pointLight1.position.x = Math.sin(time * 0.4) * 20;
+            this.pointLight1.position.y = Math.cos(time * 0.25) * 20;
+            this.pointLight1.position.z = Math.sin(time * 0.6) * 10 + 15;
+        }
+
+        if (this.pointLight2) {
+            this.pointLight2.position.x = Math.cos(time * 0.3) * 25;
+            this.pointLight2.position.y = Math.sin(time * 0.5) * 15;
+            this.pointLight2.position.z = Math.cos(time * 0.4) * 10 + 10;
+        }
+
+        if (this.pointLight3) {
+            this.pointLight3.position.x = Math.sin(time * 0.35) * -20;
+            this.pointLight3.position.y = Math.cos(time * 0.45) * -15;
+            this.pointLight3.position.z = Math.sin(time * 0.55) * 10 + 12;
         }
 
         this.renderer.render(this.scene, this.camera);
