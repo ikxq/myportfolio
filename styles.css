@@ -1144,6 +1144,17 @@ body[dir="rtl"] .modal-close {
     color: #ef4444;
 }
 
+/* Honeypot field - hidden from users */
+.honey-pot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* RTL Support for Form */
 body[dir="rtl"] .contact-item:hover {
     transform: translateX(-10px);

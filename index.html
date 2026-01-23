@@ -715,6 +715,12 @@
                         <textarea id="message" name="message" class="form-input form-textarea" required placeholder="Tell me about your project..." rows="5"></textarea>
                     </div>
 
+                    <!-- Honeypot field - hidden from humans, catches bots -->
+                    <div class="form-group honey-pot" aria-hidden="true">
+                        <label for="website">Website</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <button type="submit" class="form-submit-btn">
                         <span class="btn-text">Send Message</span>
                         <span class="btn-loader">

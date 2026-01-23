@@ -932,6 +932,20 @@ window.addEventListener('load', () => {
     emailjs.init('hRUMTuUifgkmuFkzx');
 })();
 
+// Input Sanitization Function - Prevents XSS attacks
+function sanitizeInput(input) {
+    if (!input) return '';
+    const div = document.createElement('div');
+    div.textContent = input;
+    return div.innerHTML
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .trim();
+}
+
 // Contact Form Submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
@@ -943,15 +957,49 @@ if (contactForm) {
         const btnLoader = submitBtn.querySelector('.btn-loader');
         const formMessage = this.querySelector('.form-message');
 
-        // Get form data
+        // Honeypot check - if filled, it's a bot
+        const honeypot = this.querySelector('#website');
+        if (honeypot && honeypot.value !== '') {
+            // Silently reject bot submission (fake success)
+            formMessage.textContent = currentLang === 'ar'
+                ? 'تم إرسال رسالتك بنجاح!'
+                : 'Message sent successfully!';
+            formMessage.className = 'form-message success';
+            formMessage.style.display = 'block';
+            this.reset();
+            return;
+        }
+
+        // Get and sanitize form data
         const formData = {
-            from_name: this.name.value,
-            from_email: this.email.value,
-            reply_to: this.email.value,
-            phone: this.phone.value || 'Not provided',
-            project_type: this.projectType.value,
-            message: this.message.value
+            from_name: sanitizeInput(this.name.value),
+            from_email: sanitizeInput(this.email.value),
+            reply_to: sanitizeInput(this.email.value),
+            phone: sanitizeInput(this.phone.value) || 'Not provided',
+            project_type: sanitizeInput(this.projectType.value),
+            message: sanitizeInput(this.message.value)
         };
+
+        // Basic validation
+        if (!formData.from_name || !formData.from_email || !formData.message) {
+            formMessage.textContent = currentLang === 'ar'
+                ? 'يرجى ملء جميع الحقول المطلوبة.'
+                : 'Please fill in all required fields.';
+            formMessage.className = 'form-message error';
+            formMessage.style.display = 'block';
+            return;
+        }
+
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.from_email)) {
+            formMessage.textContent = currentLang === 'ar'
+                ? 'يرجى إدخال بريد إلكتروني صحيح.'
+                : 'Please enter a valid email address.';
+            formMessage.className = 'form-message error';
+            formMessage.style.display = 'block';
+            return;
+        }
 
         // Show loading state
         submitBtn.disabled = true;
