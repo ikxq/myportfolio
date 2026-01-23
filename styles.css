@@ -272,6 +272,46 @@ body[dir="rtl"] .modal-close {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Hero Buttons Container */
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* CV Download Button */
+.cv-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+}
+
+.cv-button:hover {
+    background: white;
+    color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+.cv-button svg {
+    transition: transform 0.3s ease;
+}
+
+.cv-button:hover svg {
+    transform: translateY(3px);
+    stroke: #667eea;
+}
+
 /* Projects Section */
 .projects-section {
     padding: 6rem 5%;
