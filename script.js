@@ -1,3 +1,12 @@
+// Initialize AOS (Animate On Scroll)
+AOS.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    once: true,
+    offset: 50,
+    delay: 0,
+});
+
 // Theme Toggle Functionality
 const themeToggle = document.getElementById('themeToggle');
 const html = document.documentElement;
