@@ -533,6 +533,15 @@ const translations = {
         viewProject: "View Project",
         github: "GitHub",
 
+        // FAB Menu Tooltips
+        fabProjects: "Projects",
+        fabSkills: "Skills",
+        fabContact: "Contact",
+        fabBackToTop: "Back to Top",
+
+        // WhatsApp Tooltip
+        whatsappTooltip: "Chat with me!",
+
         // Skills Section
         skillsTitle: "Technical Skills",
         skillsSubtitle: "Technologies I work with",
@@ -633,6 +642,15 @@ const translations = {
         viewDetails: "عرض التفاصيل",
         viewProject: "عرض المشروع",
         github: "جيت هاب",
+
+        // FAB Menu Tooltips
+        fabProjects: "المشاريع",
+        fabSkills: "المهارات",
+        fabContact: "تواصل",
+        fabBackToTop: "العودة للأعلى",
+
+        // WhatsApp Tooltip
+        whatsappTooltip: "تحدث معي!",
 
         // Skills Section
         skillsTitle: "المهارات التقنية",
@@ -843,6 +861,17 @@ function switchLanguage(lang) {
         const shenSecondaryBtn = shenCard.querySelector('.btn-secondary.btn-modal');
         if (shenSecondaryBtn) shenSecondaryBtn.textContent = t.viewDetails;
     }
+
+    // Update FAB menu tooltips
+    const fabMenuItems = document.querySelectorAll('.fab-menu-item');
+    if (fabMenuItems[0]) fabMenuItems[0].setAttribute('data-tooltip', t.fabProjects);
+    if (fabMenuItems[1]) fabMenuItems[1].setAttribute('data-tooltip', t.fabSkills);
+    if (fabMenuItems[2]) fabMenuItems[2].setAttribute('data-tooltip', t.fabContact);
+    if (fabMenuItems[3]) fabMenuItems[3].setAttribute('data-tooltip', t.fabBackToTop);
+
+    // Update WhatsApp tooltip
+    const whatsappTooltip = document.querySelector('.whatsapp-tooltip');
+    if (whatsappTooltip) whatsappTooltip.textContent = t.whatsappTooltip;
 
     // Update project card descriptions
     const projectCards = document.querySelectorAll('.project-card');
