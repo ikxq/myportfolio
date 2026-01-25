@@ -506,17 +506,25 @@ const translations = {
         skills: "Skills",
         contact: "Contact",
         langButton: "عربي",
+        portfolio: "Portfolio",
 
         // Hero Section
         heroTitle: "Welcome to My Portfolio",
         heroSubtitle: "Showcasing my best work in web and mobile development",
         ctaButton: "View My Work",
+        downloadCV: "Download CV",
+        availableForHire: "Available for Hire",
 
         // Stats Section
         statProjects: "Projects Completed",
         statTech: "Technologies Mastered",
-        statUsers: "Happy Users",
         statCode: "Lines of Code",
+
+        // Project Tags
+        webApp: "Web Application",
+        ecommerce: "E-Commerce",
+        mobileApp: "Mobile App",
+        live: "LIVE",
 
         // Projects Section
         projectsTitle: "Featured Projects",
@@ -599,17 +607,25 @@ const translations = {
         skills: "المهارات",
         contact: "تواصل",
         langButton: "English",
+        portfolio: "معرض الأعمال",
 
         // Hero Section
         heroTitle: "مرحباً بك في معرض أعمالي",
         heroSubtitle: "عرض أفضل أعمالي في تطوير الويب والتطبيقات",
         ctaButton: "شاهد أعمالي",
+        downloadCV: "تحميل السيرة الذاتية",
+        availableForHire: "متاح للعمل",
 
         // Stats Section
         statProjects: "مشاريع منجزة",
         statTech: "تقنيات متقنة",
-        statUsers: "مستخدم سعيد",
         statCode: "سطر برمجي",
+
+        // Project Tags
+        webApp: "تطبيق ويب",
+        ecommerce: "تجارة إلكترونية",
+        mobileApp: "تطبيق جوال",
+        live: "مباشر",
 
         // Projects Section
         projectsTitle: "المشاريع المميزة",
@@ -693,17 +709,26 @@ function switchLanguage(lang) {
     currentLang = lang;
     const t = translations[lang];
 
-    // Update body direction
+    // Update HTML lang and body direction
+    document.documentElement.setAttribute('lang', lang === 'ar' ? 'ar' : 'en');
     document.body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
 
     // Update language button
     document.querySelector('.lang-text').textContent = t.langButton;
+
+    // Update logo text
+    const logoText = document.querySelector('.logo-text');
+    if (logoText) logoText.textContent = t.portfolio;
 
     // Update navigation
     document.querySelectorAll('.nav-links a').forEach(link => {
         const key = link.getAttribute('href').substring(1);
         link.textContent = t[key] || link.textContent;
     });
+
+    // Update Available for Hire badge
+    const hireBadge = document.querySelector('.hire-badge span:last-child');
+    if (hireBadge) hireBadge.textContent = t.availableForHire;
 
     // Update hero section
     const typingText = document.querySelector('.typing-text');
@@ -724,12 +749,21 @@ function switchLanguage(lang) {
     document.querySelector('.hero-subtitle').textContent = t.heroSubtitle;
     document.querySelector('.cta-button').textContent = t.ctaButton;
 
+    // Update CV Download button
+    const cvButton = document.querySelector('.cv-button');
+    if (cvButton) {
+        // Get only the text node, not the SVG
+        const textNodes = Array.from(cvButton.childNodes).filter(node => node.nodeType === Node.TEXT_NODE);
+        if (textNodes.length > 0) {
+            textNodes[textNodes.length - 1].textContent = t.downloadCV;
+        }
+    }
+
     // Update stats section
     const statLabels = document.querySelectorAll('.stat-label');
     statLabels[0].textContent = t.statProjects;
     statLabels[1].textContent = t.statTech;
-    statLabels[2].textContent = t.statUsers;
-    statLabels[3].textContent = t.statCode;
+    statLabels[2].textContent = t.statCode;
 
     // Update projects section
     const sectionTitles = document.querySelectorAll('.section-title');
@@ -783,35 +817,59 @@ function switchLanguage(lang) {
     const footer = document.querySelector('.footer p');
     if (footer) {
         const currentYear = new Date().getFullYear();
-        footer.textContent = `© ${currentYear} ${t.footerText}`;
+        if (lang === 'ar') {
+            footer.textContent = `© ${currentYear} أحمد السعدي. جميع الحقوق محفوظة.`;
+        } else {
+            footer.textContent = `© ${currentYear} Ahmed Alsaadi. All rights reserved.`;
+        }
     }
 
-    // Update buttons text
-    document.querySelectorAll('.btn-primary').forEach((btn, index) => {
-        if (index === 1) { // Shen project - View Project
-            btn.textContent = t.viewProject;
-        } else {
-            btn.textContent = t.viewDetails;
-        }
-    });
+    // Update buttons text in project cards
+    const projectCardBtns = document.querySelectorAll('.project-card .btn-primary');
+    if (projectCardBtns[0]) projectCardBtns[0].textContent = t.viewDetails; // Mazad
+    if (projectCardBtns[1]) projectCardBtns[1].textContent = t.viewProject; // Shen - View Project
+    if (projectCardBtns[2]) projectCardBtns[2].textContent = t.viewDetails; // CafeConnect
 
-    document.querySelectorAll('.btn-secondary').forEach(btn => {
+    const secondaryBtns = document.querySelectorAll('.project-card .btn-secondary');
+    secondaryBtns.forEach(btn => {
+        // Skip if it's already a link with text
+        if (btn.tagName === 'A') return;
         btn.textContent = t.github;
     });
+
+    // Update Shen "View Details" button (second button)
+    const shenCard = projectCards[1];
+    if (shenCard) {
+        const shenSecondaryBtn = shenCard.querySelector('.btn-secondary.btn-modal');
+        if (shenSecondaryBtn) shenSecondaryBtn.textContent = t.viewDetails;
+    }
 
     // Update project card descriptions
     const projectCards = document.querySelectorAll('.project-card');
     if (projectCards[0]) { // Mazad
         projectCards[0].querySelector('.project-title').textContent = t.mazadTitle;
         projectCards[0].querySelector('.project-description').textContent = t.mazadDesc;
+        const mazadTag = projectCards[0].querySelector('.project-tag');
+        if (mazadTag) mazadTag.textContent = t.webApp;
     }
     if (projectCards[1]) { // Shen
         projectCards[1].querySelector('.project-title').textContent = t.shenTitle;
         projectCards[1].querySelector('.project-description').textContent = t.shenDesc;
+        const shenTags = projectCards[1].querySelectorAll('.project-tag');
+        if (shenTags[0]) shenTags[0].textContent = t.ecommerce;
+        const liveBadge = projectCards[1].querySelector('.live-badge');
+        if (liveBadge) {
+            const liveBadgeText = liveBadge.childNodes[liveBadge.childNodes.length - 1];
+            if (liveBadgeText.nodeType === Node.TEXT_NODE) {
+                liveBadgeText.textContent = ' ' + t.live;
+            }
+        }
     }
     if (projectCards[2]) { // CafeConnect
         projectCards[2].querySelector('.project-title').textContent = t.cafeTitle;
         projectCards[2].querySelector('.project-description').textContent = t.cafeDesc;
+        const cafeTag = projectCards[2].querySelector('.project-tag');
+        if (cafeTag) cafeTag.textContent = t.mobileApp;
     }
 
     // Update Mazad Oman modal content
