@@ -974,6 +974,15 @@ function switchLanguage(lang) {
         if (cafeTechTitle) cafeTechTitle.textContent = t.techUsed;
     }
 
+    // Generic translation for all elements with data-en and data-ar attributes
+    document.querySelectorAll('[data-en][data-ar]').forEach(element => {
+        if (lang === 'ar') {
+            element.textContent = element.getAttribute('data-ar');
+        } else {
+            element.textContent = element.getAttribute('data-en');
+        }
+    });
+
     // Save language preference
     localStorage.setItem('preferredLanguage', lang);
 }
