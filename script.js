@@ -842,26 +842,6 @@ function switchLanguage(lang) {
         }
     }
 
-    // Update buttons text in project cards
-    const projectCardBtns = document.querySelectorAll('.project-card .btn-primary');
-    if (projectCardBtns[0]) projectCardBtns[0].textContent = t.viewDetails; // Mazad
-    if (projectCardBtns[1]) projectCardBtns[1].textContent = t.viewProject; // Shen - View Project
-    if (projectCardBtns[2]) projectCardBtns[2].textContent = t.viewDetails; // CafeConnect
-
-    const secondaryBtns = document.querySelectorAll('.project-card .btn-secondary');
-    secondaryBtns.forEach(btn => {
-        // Skip if it's already a link with text
-        if (btn.tagName === 'A') return;
-        btn.textContent = t.github;
-    });
-
-    // Update Shen "View Details" button (second button)
-    const shenCard = projectCards[1];
-    if (shenCard) {
-        const shenSecondaryBtn = shenCard.querySelector('.btn-secondary.btn-modal');
-        if (shenSecondaryBtn) shenSecondaryBtn.textContent = t.viewDetails;
-    }
-
     // Update FAB menu tooltips
     const fabMenuItems = document.querySelectorAll('.fab-menu-item');
     if (fabMenuItems[0]) fabMenuItems[0].setAttribute('data-tooltip', t.fabProjects);
@@ -872,107 +852,6 @@ function switchLanguage(lang) {
     // Update WhatsApp tooltip
     const whatsappTooltip = document.querySelector('.whatsapp-tooltip');
     if (whatsappTooltip) whatsappTooltip.textContent = t.whatsappTooltip;
-
-    // Update project card descriptions
-    const projectCards = document.querySelectorAll('.project-card');
-    if (projectCards[0]) { // Mazad
-        projectCards[0].querySelector('.project-title').textContent = t.mazadTitle;
-        projectCards[0].querySelector('.project-description').textContent = t.mazadDesc;
-        const mazadTag = projectCards[0].querySelector('.project-tag');
-        if (mazadTag) mazadTag.textContent = t.webApp;
-    }
-    if (projectCards[1]) { // Shen
-        projectCards[1].querySelector('.project-title').textContent = t.shenTitle;
-        projectCards[1].querySelector('.project-description').textContent = t.shenDesc;
-        const shenTags = projectCards[1].querySelectorAll('.project-tag');
-        if (shenTags[0]) shenTags[0].textContent = t.ecommerce;
-        const liveBadge = projectCards[1].querySelector('.live-badge');
-        if (liveBadge) {
-            const liveBadgeText = liveBadge.childNodes[liveBadge.childNodes.length - 1];
-            if (liveBadgeText.nodeType === Node.TEXT_NODE) {
-                liveBadgeText.textContent = ' ' + t.live;
-            }
-        }
-    }
-    if (projectCards[2]) { // CafeConnect
-        projectCards[2].querySelector('.project-title').textContent = t.cafeTitle;
-        projectCards[2].querySelector('.project-description').textContent = t.cafeDesc;
-        const cafeTag = projectCards[2].querySelector('.project-tag');
-        if (cafeTag) cafeTag.textContent = t.mobileApp;
-    }
-
-    // Update Mazad Oman modal content
-    const mazadModal = document.getElementById('mazad-modal');
-    if (mazadModal) {
-        const mazadDetails = mazadModal;
-        mazadDetails.querySelector('.detail-title').textContent = t.mazadTitle;
-        mazadDetails.querySelector('.detail-subtitle').textContent = t.mazadSubtitle;
-        const mazadSections = mazadDetails.querySelectorAll('.showcase-item');
-        if (mazadSections[0]) {
-            mazadSections[0].querySelector('h3').textContent = t.mazadSection1Title;
-            mazadSections[0].querySelector('p').textContent = t.mazadSection1Desc;
-        }
-        if (mazadSections[1]) {
-            mazadSections[1].querySelector('h3').textContent = t.mazadSection2Title;
-            mazadSections[1].querySelector('p').textContent = t.mazadSection2Desc;
-        }
-        if (mazadSections[2]) {
-            mazadSections[2].querySelector('h3').textContent = t.mazadSection3Title;
-            mazadSections[2].querySelector('p').textContent = t.mazadSection3Desc;
-        }
-        if (mazadSections[3]) {
-            mazadSections[3].querySelector('h3').textContent = t.mazadSection4Title;
-            mazadSections[3].querySelector('p').textContent = t.mazadSection4Desc;
-        }
-        const mazadTechTitle = mazadDetails.querySelector('.tech-details h3');
-        if (mazadTechTitle) mazadTechTitle.textContent = t.techUsed;
-    }
-
-    // Update Shen modal content
-    const shenModal = document.getElementById('shen-modal');
-    if (shenModal) {
-        const shenDetails = shenModal;
-        shenDetails.querySelector('.detail-title').textContent = t.shenTitle;
-        shenDetails.querySelector('.detail-subtitle').textContent = t.shenSubtitle;
-        const shenSections = shenDetails.querySelectorAll('.showcase-item');
-        if (shenSections[0]) {
-            shenSections[0].querySelector('h3').textContent = t.shenSection1Title;
-            shenSections[0].querySelector('p').textContent = t.shenSection1Desc;
-        }
-        if (shenSections[1]) {
-            shenSections[1].querySelector('h3').textContent = t.shenSection2Title;
-            shenSections[1].querySelector('p').textContent = t.shenSection2Desc;
-        }
-        if (shenSections[2]) {
-            shenSections[2].querySelector('h3').textContent = t.shenSection3Title;
-            shenSections[2].querySelector('p').textContent = t.shenSection3Desc;
-        }
-        const shenTechTitle = shenDetails.querySelector('.tech-details h3');
-        if (shenTechTitle) shenTechTitle.textContent = t.techUsed;
-    }
-
-    // Update CafeConnect modal content
-    const cafeModal = document.getElementById('cafeconnect-modal');
-    if (cafeModal) {
-        const cafeDetails = cafeModal;
-        cafeDetails.querySelector('.detail-title').textContent = t.cafeTitle;
-        cafeDetails.querySelector('.detail-subtitle').textContent = t.cafeSubtitle;
-        const cafeSections = cafeDetails.querySelectorAll('.showcase-item');
-        if (cafeSections[0]) {
-            cafeSections[0].querySelector('h3').textContent = t.cafeSection1Title;
-            cafeSections[0].querySelector('p').textContent = t.cafeSection1Desc;
-        }
-        if (cafeSections[1]) {
-            cafeSections[1].querySelector('h3').textContent = t.cafeSection2Title;
-            cafeSections[1].querySelector('p').textContent = t.cafeSection2Desc;
-        }
-        if (cafeSections[2]) {
-            cafeSections[2].querySelector('h3').textContent = t.cafeSection3Title;
-            cafeSections[2].querySelector('p').textContent = t.cafeSection3Desc;
-        }
-        const cafeTechTitle = cafeDetails.querySelector('.tech-details h3');
-        if (cafeTechTitle) cafeTechTitle.textContent = t.techUsed;
-    }
 
     // Generic translation for all elements with data-en and data-ar attributes
     document.querySelectorAll('[data-en][data-ar]').forEach(element => {
